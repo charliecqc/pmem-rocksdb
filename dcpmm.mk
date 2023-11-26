@@ -5,7 +5,7 @@ ifdef ROCKSDB_ON_DCPMM
 ifdef PMDK_LIBRARY_PATH
 LDFLAGS += -L$(PMDK_LIBRARY_PATH) -Wl,-rpath=$(PMDK_LIBRARY_PATH)
 else
-LDFLAGS += -L/usr/local/lib/ -L/usr/local/lib64/
+LDFLAGS += -L/usr/local/lib/ -L/usr/local/lib64/ -L/usr/lib/
 endif
 LDFLAGS += -lpmem -lpmemobj
 

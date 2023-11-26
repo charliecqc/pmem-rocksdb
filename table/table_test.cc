@@ -228,7 +228,7 @@ class BlockConstructor: public Constructor {
     block_ = nullptr;
     BlockBuilder builder(table_options.block_restart_interval);
 
-    for (const auto kv : kv_map) {
+    for (const auto& kv : kv_map) {
       builder.Add(kv.first, kv.second);
     }
     // Open the block
@@ -352,7 +352,7 @@ class TableConstructor: public Constructor {
         TablePropertiesCollectorFactory::Context::kUnknownColumnFamily,
         file_writer_.get()));
 
-    for (const auto kv : kv_map) {
+    for (const auto& kv : kv_map) {
       if (convert_to_internal_key_) {
         ParsedInternalKey ikey(kv.first, kMaxSequenceNumber, kTypeValue);
         std::string encoded;
@@ -487,7 +487,7 @@ class MemTableConstructor: public Constructor {
                              kMaxSequenceNumber, 0 /* column_family_id */);
     memtable_->Ref();
     int seq = 1;
-    for (const auto kv : kv_map) {
+    for (const auto& kv : kv_map) {
       memtable_->Add(seq, kTypeValue, kv.first, kv.second);
       seq++;
     }
@@ -548,7 +548,7 @@ class DBConstructor: public Constructor {
     delete db_;
     db_ = nullptr;
     NewDB();
-    for (const auto kv : kv_map) {
+    for (const auto& kv : kv_map) {
       WriteBatch batch;
       batch.Put(kv.first, kv.second);
       EXPECT_TRUE(db_->Write(WriteOptions(), &batch).ok());
@@ -1224,7 +1224,7 @@ class FileChecksumTestHelper {
   }
 
   Status WriteKVAndFlushTable() {
-    for (const auto kv : kv_map_) {
+    for (const auto& kv : kv_map_) {
       if (convert_to_internal_key_) {
         ParsedInternalKey ikey(kv.first, kMaxSequenceNumber, kTypeValue);
         std::string encoded;
@@ -1318,7 +1318,7 @@ TEST_F(TablePropertyTest, PrefixScanTest) {
                                 {"num.555.3", "3"}, };
 
   // prefixes that exist
-  for (const std::string& prefix : {"num.111", "num.333", "num.555"}) {
+  for (const std::string prefix : {"num.111", "num.333", "num.555"}) {
     int num = 0;
     for (auto pos = props.lower_bound(prefix);
          pos != props.end() &&
@@ -1333,7 +1333,7 @@ TEST_F(TablePropertyTest, PrefixScanTest) {
   }
 
   // prefixes that don't exist
-  for (const std::string& prefix :
+  for (const std::string prefix :
        {"num.000", "num.222", "num.444", "num.666"}) {
     auto pos = props.lower_bound(prefix);
     ASSERT_TRUE(pos == props.end() ||
